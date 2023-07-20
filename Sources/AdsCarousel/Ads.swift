@@ -84,6 +84,10 @@ open class Ads: UIView, AdsProtocol, UICollectionViewDelegate {
     
     public func displayAds(_ items: [Item]) -> Void {
         self.items = items
+        for item in items {
+            SDWebImageDownloader.shared.downloadImage(with: item.url, options: [.progressiveLoad], progress: nil)
+        }
+
         collectionView.reloadData()
     }
     
