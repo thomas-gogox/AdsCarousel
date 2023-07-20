@@ -6,6 +6,6 @@ final class AdsCarouselTests: XCTestCase {
         // This is an example of a functional test case.
         // Use XCTAssert and related functions to verify your tests produce the correct
         // results.
-        XCTAssertEqual(AdsCarousel().text, "Hello, World!")
+        XCTAssertEqual(Ads(aspectRatio: 3.81).aspectRatio, 3.81)
     }
 }
