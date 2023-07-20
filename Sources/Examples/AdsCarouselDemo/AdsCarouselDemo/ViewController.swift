@@ -69,7 +69,7 @@ class ViewController: UIViewController {
         
         var items = [Item]()
         let target = URL(string: "https://gogox.com")!
-        var url = URL(string: "https://s3-ap-northeast-1.amazonaws.com/wp-gogovan.com/wp-content/uploads/sites/6/2022/06/14174916/dk-7.jpg")!
+        var url = URL(string: "https://i.gifer.com/Ezsm.gif")!
         items.append(Item.init(url: url, targetUrl: target))
         url = URL(string: "https://s3-ap-northeast-1.amazonaws.com/wp-gogovan.com/wp-content/uploads/sites/6/2022/06/23170716/dk-4.jpg")!
         items.append(Item.init(url: url, targetUrl: target))

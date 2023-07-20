@@ -138,21 +138,7 @@ extension Ads: UICollectionViewDataSource {
             for: indexPath
         ) as! AdsCell
         let item = items[indexPath.row]
-        if item.image == nil {
-            SDWebImageDownloader.shared.downloadImage(with: item.url as URL) { [weak self] image, _, _, finished in
-                if finished == true, let img = image, img != item.image {
-                    guard let self = self else {
-                        return
-                    }
-                    
-                    let item = self.items[indexPath.row]
-                    item.image = img
-                    DispatchQueue.main.async {
-                        collectionView.reloadItems(at: [indexPath])
-                    }
-                }
-            }
-        }
+        cell.configure(with: item.url)
         return cell
     }
 }
@@ -207,15 +193,15 @@ extension Ads: UICollectionViewDelegateFlowLayout {
         selectionSubject.send(indexPath)
     }
     
-    public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell,
-                               forItemAt indexPath: IndexPath) {
-        let index = indexPath.item
-        if index < items.count,
-           let cell = cell as? AdsCell {
-            let item = items[index]
-            cell.configure(with: item.image)
-        }
-    }
+//    public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell,
+//                               forItemAt indexPath: IndexPath) {
+//        let index = indexPath.item
+//        if index < items.count,
+//           let cell = cell as? AdsCell {
+//            let item = items[index]
+//            cell.configure(with: item.url)
+//        }
+//    }
     
     public func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         return CGSize.zero

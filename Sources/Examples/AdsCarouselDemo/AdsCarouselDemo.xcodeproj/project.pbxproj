@@ -17,6 +17,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E949B7F02A6929C100F3EC5D /* AdsCarousel */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = AdsCarousel; path = ../../..; sourceTree = "<group>"; };
 		E9A7B04C2A664491006F6B15 /* AdsCarouselDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AdsCarouselDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E9A7B04F2A664491006F6B15 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E9A7B0512A664491006F6B15 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -25,7 +26,6 @@
 		E9A7B0582A664492006F6B15 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E9A7B05B2A664492006F6B15 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E9A7B05D2A664492006F6B15 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E9A7B0672A6671E3006F6B15 /* AdsCarousel */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = AdsCarousel; path = ../../..; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,7 +75,7 @@
 		E9A7B0632A664A0C006F6B15 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				E9A7B0672A6671E3006F6B15 /* AdsCarousel */,
+				E949B7F02A6929C100F3EC5D /* AdsCarousel */,
 			);
 			name = Packages;
 			sourceTree = "<group>";

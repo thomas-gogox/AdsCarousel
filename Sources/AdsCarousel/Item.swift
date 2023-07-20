@@ -14,8 +14,7 @@ enum Section: CaseIterable {
 }
 
 public class Item: Hashable {
-    var image: UIImage?
-    let url: URL!
+    let url: URL
     let targetUrl: URL?
     let identifier = UUID()
     
@@ -26,8 +25,7 @@ public class Item: Hashable {
         return lhs.identifier == rhs.identifier
     }
     
-    public init(url: URL, targetUrl: URL?, image: UIImage? = nil) {
-        self.image = image
+    public init(url: URL, targetUrl: URL?) {
         self.url = url
         self.targetUrl = targetUrl
     }

@@ -44,8 +44,8 @@ class AdsCell: UICollectionViewCell {
         ])
     }
     
-    func configure(with image: UIImage?) {
-        adsImageView.image = image
+    func configure(with imageUrl: URL) {
+        adsImageView.sd_setImage(with: imageUrl, placeholderImage: nil, options: [.progressiveLoad])
     }
 }
 
