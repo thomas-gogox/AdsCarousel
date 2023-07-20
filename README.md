@@ -1,3 +1,2 @@
 # AdsCarousel
-
-A description of this package.
+Ads banner carousel
