@@ -18,6 +18,8 @@ open class Ads: UIView, AdsProtocol, UICollectionViewDelegate {
         static let sectionInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
     }
     
+    private var downloadManager: SDWebImageDownloader = SDWebImageDownloader()
+    
     private var animationDuration: TimeInterval
     
     private var timer: Timer?
@@ -25,6 +27,8 @@ open class Ads: UIView, AdsProtocol, UICollectionViewDelegate {
     private var firstVisibleIndexPath: IndexPath = IndexPath(row: 0, section: 0)
     
     private let selectionSubject = PassthroughSubject<IndexPath, Never>()
+    
+    private let downloadStatusSubject = PassthroughSubject<Bool, Never>()
     
     private(set) var aspectRatio: Double
     
@@ -64,6 +68,10 @@ open class Ads: UIView, AdsProtocol, UICollectionViewDelegate {
         selectionSubject.eraseToAnyPublisher()
     }
     
+    public var downloadStatusPublisher: AnyPublisher<Bool, Never> {
+        downloadStatusSubject.eraseToAnyPublisher()
+    }
+    
     private func setupViews() -> Void {
         self.backgroundColor = UIColor(white: 0.95, alpha: 0.95)
         self.addSubview(collectionView)
@@ -83,12 +91,23 @@ open class Ads: UIView, AdsProtocol, UICollectionViewDelegate {
     }
     
     public func displayAds(_ items: [Item]) -> Void {
+        self.downloadStatusSubject.send(false)
         self.items = items
         for item in items {
-            SDWebImageDownloader.shared.downloadImage(with: item.url, options: [.progressiveLoad], progress: nil)
+            downloadManager.downloadImage(with: item.url, options: [.progressiveLoad], progress: nil) { [weak self] _, _, _, _ in
+                guard let self = self else {
+                    return
+                }
+                print("currentDownloadCount: \(self.downloadManager.currentDownloadCount)")
+                guard self.downloadManager.currentDownloadCount <= 0 else {
+                    return
+                }
+                
+                // Download completed
+                self.downloadStatusSubject.send(true)
+                self.collectionView.reloadData()
+            }
         }
-
-        collectionView.reloadData()
     }
     
     @objc func moveToNextAds() {

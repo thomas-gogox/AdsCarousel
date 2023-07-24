@@ -28,6 +28,7 @@ class ViewController: UIViewController {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .clear
+        view.isHidden = true
         return view
     }()
     
@@ -48,6 +49,8 @@ class ViewController: UIViewController {
         
         adsContainer.layer.cornerRadius = 8
         adsContainer.clipsToBounds = true
+        
+        setupProcessingChain()
         
         let contentView: UIView = view
         
@@ -86,6 +89,14 @@ class ViewController: UIViewController {
         adsPresenter.selectionPublisher
             .sink { indexPath in
                 print("IndexPath: \(indexPath)")
+            }
+            .store(in: &disposeBag)
+        
+        adsPresenter.downloadStatusPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] allDownloaded in
+                print("allDownloaded: \(allDownloaded)")
+                self?.adsContainer.isHidden = !allDownloaded
             }
             .store(in: &disposeBag)
     }
