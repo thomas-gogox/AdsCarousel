@@ -86,11 +86,10 @@ open class Ads: UIView, AdsProtocol, UICollectionViewDelegate {
         
         collectionView.delegate = self
         collectionView.dataSource = self
-        
-        timer = Timer.scheduledTimer(timeInterval: animationDuration, target: self, selector: #selector(moveToNextAds), userInfo: nil, repeats: true)
     }
     
     public func displayAds(_ items: [Item]) -> Void {
+        timer?.invalidate()
         self.downloadStatusSubject.send(false)
         self.items = items
         for item in items {
@@ -98,7 +97,7 @@ open class Ads: UIView, AdsProtocol, UICollectionViewDelegate {
                 guard let self = self else {
                     return
                 }
-                print("currentDownloadCount: \(self.downloadManager.currentDownloadCount)")
+//                print("currentDownloadCount: \(self.downloadManager.currentDownloadCount)")
                 guard self.downloadManager.currentDownloadCount <= 0 else {
                     return
                 }
@@ -106,6 +105,7 @@ open class Ads: UIView, AdsProtocol, UICollectionViewDelegate {
                 // Download completed
                 self.downloadStatusSubject.send(true)
                 self.collectionView.reloadData()
+                self.timer = Timer.scheduledTimer(timeInterval: animationDuration, target: self, selector: #selector(moveToNextAds), userInfo: nil, repeats: true)
             }
         }
     }
@@ -115,27 +115,25 @@ open class Ads: UIView, AdsProtocol, UICollectionViewDelegate {
             return
         }
         
-        
-         let indexPath = firstVisibleIndexPath
-            if (indexPath.row < items.count - 1){
-                let indexPath1: IndexPath?
-                indexPath1 = IndexPath.init(row: indexPath.row + 1, section: indexPath.section)
+        let indexPath = firstVisibleIndexPath
+        if (indexPath.row < items.count - 1){
+            let indexPath1: IndexPath?
+            indexPath1 = IndexPath.init(row: indexPath.row + 1, section: indexPath.section)
 //                print("Row: \(indexPath1!.row)")
-                firstVisibleIndexPath = indexPath1!
-                collectionView.isPagingEnabled = false
-                collectionView.scrollToItem(at: indexPath1!, at: .right, animated: true)
-                collectionView.isPagingEnabled = true
-            }
-            else{
-                let indexPath1: IndexPath?
-                indexPath1 = IndexPath.init(row: 0, section: indexPath.section)
+            firstVisibleIndexPath = indexPath1!
+            collectionView.isPagingEnabled = false
+            collectionView.scrollToItem(at: indexPath1!, at: .right, animated: true)
+            collectionView.isPagingEnabled = true
+        }
+        else{
+            let indexPath1: IndexPath?
+            indexPath1 = IndexPath.init(row: 0, section: indexPath.section)
 //                print("Row1: \(indexPath1!.row)")
-                firstVisibleIndexPath = indexPath1!
-                collectionView.isPagingEnabled = false
-                collectionView.scrollToItem(at: indexPath1!, at: .left, animated: true)
-                collectionView.isPagingEnabled = true
-            }
-    
+            firstVisibleIndexPath = indexPath1!
+            collectionView.isPagingEnabled = false
+            collectionView.scrollToItem(at: indexPath1!, at: .left, animated: true)
+            collectionView.isPagingEnabled = true
+        }
     }
 }
 
