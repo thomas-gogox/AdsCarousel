@@ -80,8 +80,8 @@ open class Ads: UIView, AdsProtocol, UICollectionViewDelegate {
         NSLayoutConstraint.activate([
             collectionView.topAnchor.constraint(equalTo: self.topAnchor),
             collectionView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            collectionView.widthAnchor.constraint(equalTo: collectionView.heightAnchor, multiplier: aspectRatio)
         ])
         
         collectionView.delegate = self
@@ -119,7 +119,7 @@ open class Ads: UIView, AdsProtocol, UICollectionViewDelegate {
         if (indexPath.row < items.count - 1){
             let indexPath1: IndexPath?
             indexPath1 = IndexPath.init(row: indexPath.row + 1, section: indexPath.section)
-//                print("Row: \(indexPath1!.row)")
+//            print("Row: \(indexPath1!.row)")
             firstVisibleIndexPath = indexPath1!
             collectionView.isPagingEnabled = false
             collectionView.scrollToItem(at: indexPath1!, at: .right, animated: true)
@@ -128,7 +128,7 @@ open class Ads: UIView, AdsProtocol, UICollectionViewDelegate {
         else{
             let indexPath1: IndexPath?
             indexPath1 = IndexPath.init(row: 0, section: indexPath.section)
-//                print("Row1: \(indexPath1!.row)")
+//            print("Row1: \(indexPath1!.row)")
             firstVisibleIndexPath = indexPath1!
             collectionView.isPagingEnabled = false
             collectionView.scrollToItem(at: indexPath1!, at: .left, animated: true)
