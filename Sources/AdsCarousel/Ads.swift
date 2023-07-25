@@ -18,7 +18,7 @@ open class Ads: UIView, AdsProtocol, UICollectionViewDelegate {
         static let sectionInsets = UIEdgeInsets(top: 0.0, left: 0.0, bottom: 0.0, right: 0.0)
     }
     
-    private var downloadManager: SDWebImageDownloader = SDWebImageDownloader()
+    private var downloadManager: SDWebImageManager = SDWebImageManager.shared
     
     private var animationDuration: TimeInterval
     
@@ -94,12 +94,12 @@ open class Ads: UIView, AdsProtocol, UICollectionViewDelegate {
         self.downloadStatusSubject.send(false)
         self.items = items
         for item in items {
-            downloadManager.downloadImage(with: item.url, options: [.progressiveLoad], progress: nil) { [weak self] _, _, _, _ in
+            downloadManager.loadImage(with: item.url, options: [.progressiveLoad, .allowInvalidSSLCertificates, .continueInBackground, .highPriority], progress: nil) { [weak self] _, _, _, _, _, _ in
                 guard let self = self else {
                     return
                 }
-//                print("currentDownloadCount: \(self.downloadManager.currentDownloadCount)")
-                guard self.downloadManager.currentDownloadCount <= 0 else {
+                print("downloadManager.isRunning: \(self.downloadManager.isRunning)")
+                guard self.downloadManager.isRunning else {
                     return
                 }
                 
