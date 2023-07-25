@@ -90,6 +90,7 @@ open class Ads: UIView, AdsProtocol, UICollectionViewDelegate {
     
     public func displayAds(_ items: [Item]) -> Void {
         timer?.invalidate()
+        timer = nil
         self.downloadStatusSubject.send(false)
         self.items = items
         for item in items {
@@ -105,6 +106,7 @@ open class Ads: UIView, AdsProtocol, UICollectionViewDelegate {
                 // Download completed
                 self.downloadStatusSubject.send(true)
                 self.collectionView.reloadData()
+                self.timer?.invalidate()
                 self.timer = Timer.scheduledTimer(timeInterval: animationDuration, target: self, selector: #selector(moveToNextAds), userInfo: nil, repeats: true)
             }
         }
