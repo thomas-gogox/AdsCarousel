@@ -33,11 +33,17 @@ open class Ads: UIView, AdsProtocol, UICollectionViewDelegate {
     private(set) var aspectRatio: Double
     
     private var items = [Item]()
+
+    /// The carousel size the ads were last laid out for. A width change (rotation,
+    /// fold, Split View) re-sizes the ads and keeps the current one in view.
+    private var laidOutCarouselSize: CGSize = .zero
     
     private lazy var layout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
         layout.sectionInset = UIEdgeInsets.zero
-        layout.sectionInsetReference = .fromSafeArea
+        // Full-bleed banner: each page is exactly the carousel's bounds, so no safe-area
+        // insets (they made the carousel shorter than its ads).
+        layout.sectionInsetReference = .fromContentInset
         layout.scrollDirection = .horizontal
         return layout
     }()
@@ -49,6 +55,7 @@ open class Ads: UIView, AdsProtocol, UICollectionViewDelegate {
         collectionView.register(AdsCell.self, forCellWithReuseIdentifier: AdsCell.reuseIdentifier)
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.isPagingEnabled = true
+        collectionView.contentInsetAdjustmentBehavior = .never
         return collectionView
     }()
     
@@ -88,6 +95,27 @@ open class Ads: UIView, AdsProtocol, UICollectionViewDelegate {
         collectionView.dataSource = self
     }
     
+    open override func layoutSubviews() {
+        let oldWidth = collectionView.bounds.width
+        let page = oldWidth > 0
+            ? Int((collectionView.contentOffset.x / oldWidth).rounded())
+            : firstVisibleIndexPath.item
+        super.layoutSubviews()
+
+        let size = collectionView.bounds.size
+        guard size != laidOutCarouselSize else { return }
+        laidOutCarouselSize = size
+        // One whole ad per page: exactly the carousel's size. Set on the layout, not
+        // returned from sizeForItemAt — the flow layout keeps cached delegate sizes
+        // across a bounds change, so ads kept their old width after a rotation.
+        layout.itemSize = size
+        collectionView.layoutIfNeeded()
+
+        guard items.indices.contains(page) else { return }
+        firstVisibleIndexPath = IndexPath(item: page, section: firstVisibleIndexPath.section)
+        collectionView.contentOffset = CGPoint(x: CGFloat(page) * size.width, y: 0)
+    }
+
     public func displayAds(_ items: [Item]) -> Void {
         timer?.invalidate()
         timer = nil
@@ -168,21 +196,6 @@ extension Ads: UICollectionViewDataSource {
 
 // MARK: - UICollectionViewDelegateFlowLayout
 extension Ads: UICollectionViewDelegateFlowLayout {
-    
-    // 1
-    public func collectionView(
-        _ collectionView: UICollectionView,
-        layout collectionViewLayout: UICollectionViewLayout,
-        sizeForItemAt indexPath: IndexPath
-    ) -> CGSize {
-        // 2
-        let paddingSpace = Constants.sectionInsets.left * (Constants.itemsPerRow + 1)
-        let availableWidth = self.frame.width - paddingSpace
-        let widthPerItem = availableWidth / Constants.itemsPerRow
-        let heightPerItem = widthPerItem - layout.sectionInset.top - layout.sectionInset.bottom
-        
-        return CGSize(width: widthPerItem, height: heightPerItem)
-    }
     
     // 3
     public func collectionView(
